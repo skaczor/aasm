@@ -85,14 +85,14 @@ module AASM
         # This method is both a getter and a setter
         def aasm_column(column_name=nil)
           if column_name
-            AASM::StateMachine[self].config.column = column_name.to_sym
+            AASM::StateMachine[self.name].config.column = column_name.to_sym
             # @aasm_column = column_name.to_sym
           else
-            AASM::StateMachine[self].config.column ||= :aasm_state
+            AASM::StateMachine[self.name].config.column ||= :aasm_state
             # @aasm_column ||= :aasm_state
           end
           # @aasm_column
-          AASM::StateMachine[self].config.column
+          AASM::StateMachine[self.name].config.column
         end
 
         def find_in_state(number, state, *args)

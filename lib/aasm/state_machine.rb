@@ -1,11 +1,11 @@
 class AASM::StateMachine
   def self.[](*args)
-    (@machines ||= {})[args]
+    (@machines ||= {})[args.first]
   end
 
   def self.[]=(*args)
     val = args.pop
-    (@machines ||= {})[args] = val
+    (@machines ||= {})[args.first] = val
   end
 
   attr_accessor :states, :events, :initial_state, :config

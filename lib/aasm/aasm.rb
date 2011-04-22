@@ -8,32 +8,32 @@ module AASM
   def self.included(base) #:nodoc:
     base.extend AASM::ClassMethods
     AASM::Persistence.set_persistence(base)
-    unless AASM::StateMachine[base]
-      AASM::StateMachine[base] = AASM::StateMachine.new('')
+    unless AASM::StateMachine[base.name]
+      AASM::StateMachine[base.name] = AASM::StateMachine.new('')
     end
    super
   end
 
   module ClassMethods
     def inherited(klass)
-      AASM::StateMachine[klass] = AASM::StateMachine[self].clone
+      AASM::StateMachine[klass.name] = AASM::StateMachine[self.name].clone
       super
     end
 
     def aasm_initial_state(set_state=nil)
       if set_state
-        AASM::StateMachine[self].initial_state = set_state
+        AASM::StateMachine[self.name].initial_state = set_state
       else
-        AASM::StateMachine[self].initial_state
+        AASM::StateMachine[self.name].initial_state
       end
     end
 
     def aasm_initial_state=(state)
-      AASM::StateMachine[self].initial_state = state
+      AASM::StateMachine[self.name].initial_state = state
     end
 
     def aasm_state(name, options={})
-      sm = AASM::StateMachine[self]
+      sm = AASM::StateMachine[self.name]
       sm.create_state(name, options)
       sm.initial_state = name unless sm.initial_state
 
@@ -43,7 +43,7 @@ module AASM
     end
 
     def aasm_event(name, options = {}, &block)
-      sm = AASM::StateMachine[self]
+      sm = AASM::StateMachine[self.name]
 
       unless sm.events.has_key?(name)
         sm.events[name] = AASM::SupportingClasses::Event.new(name, options, &block)
@@ -59,15 +59,15 @@ module AASM
     end
 
     def aasm_states
-      AASM::StateMachine[self].states
+      AASM::StateMachine[self.name].states
     end
 
     def aasm_events
-      AASM::StateMachine[self].events
+      AASM::StateMachine[self.name].events
     end
 
     def aasm_states_for_select
-      AASM::StateMachine[self].states.map { |state| state.for_select }
+      AASM::StateMachine[self.name].states.map { |state| state.for_select }
     end
 
   end
